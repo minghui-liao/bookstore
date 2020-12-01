@@ -17,18 +17,21 @@ window.onload = function () {
   let id = params.get("id");
 
   let http = new XMLHttpRequest();
+  // Pass id as GET request parameter
   http.open('GET', 'item.php?id=' + id)
   http.onreadystatechange = function() {
-      console.log(this.readyState)
-      console.log(this.status)
-      console.log(this.response)
+      // console.log(this.readyState)
+      // console.log(this.status)
+      // console.log(this.response)
       // console.log(this.responseText)
       if(this.readyState == 4) {
         if (this.status == 200) {
+          // Display books if request succeeds
           book = JSON.parse(this.response)
           console.log(book)
           displayBook(book)
         } else {
+          // If product doesn't exist, return to homepage
           console.log("Product doesn't exist")
           window.location.href="./Honbookstore.html"
         }

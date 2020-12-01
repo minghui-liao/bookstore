@@ -26,16 +26,19 @@ window.onload = function() {
     document.getElementById("search").onclick = search;
 }
 
-function requestBookInfo(arr, callback) {
-    let queryStr = arr.join(',');
+function requestBookInfo(books, callback) {
+    // Join the id of books into querystr
+    let queryStr = books.join(',');
     let http = new XMLHttpRequest();
+    // Pass queryStr as GET request parameter
     http.open('GET', 'landing.php?ids=' + queryStr)
     http.onreadystatechange = function() {
-        console.log(this.readyState)
-        console.log(this.status)
-        console.log(this.response)
+        // console.log(this.readyState)
+        // console.log(this.status)
+        // console.log(this.response)
         // console.log(this.responseText)
         if(this.readyState == 4 && this.status == 200) {
+            // Run callback function if request succeeds
             books = JSON.parse(this.response)
             console.log(books)
             callback(books);

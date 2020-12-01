@@ -48,7 +48,7 @@ window.onload = function() {
     console.log(keyword);
 
     // If keyword is empty, return to home page. 
-    if (!keyword || keyword == "") {
+    if (!keyword) {
         window.location.href = "./Honbookstore.html";
         return;
     }
@@ -59,7 +59,8 @@ window.onload = function() {
     //     filteredBooks = books;
     // }
     
-    var http = new XMLHttpRequest();
+    let http = new XMLHttpRequest();
+    // Pass keyword as GET request parameter
     http.open('GET', 'searchbar.php?keyword=' + keyword)
     http.onreadystatechange = function() {
         console.log(this.readyState)
@@ -67,13 +68,14 @@ window.onload = function() {
         //console.log(this.response)
         console.log(this.responseText)
         if(this.readyState == 4 && this.status == 200) {
+            // Get the books if request succeeds
             books = JSON.parse(this.response);
             filteredBooks = books;
             console.log(books);
-            displayBooks(books);
         } else {
             books = [];
         }
+        displayBooks(books);
     };
     http.send();
 }
@@ -89,6 +91,13 @@ function sortFunc() {
 
 // Display the books
 function displayBooks(books) {
+    if (books.length == 0) {
+        document.getElementById("searchInfo").innerHTML = "Couldn't find any books match keyword: " + keyword;
+        return ;
+    } 
+    // Show the search query keyword on web page
+    document.getElementById("searchInfo").innerHTML = "You are searchching: " + keyword;
+
     if (sortOrder == 1) {
         // Sorting the books by price from lowest to highest
         books.sort((book1, book2) => book1.price - book2.price);
@@ -97,10 +106,6 @@ function displayBooks(books) {
         books.sort((book1, book2) => book2.price - book1.price);
     }
 
-    // Show the search query keyword on web page
-    if (keyword) {
-        document.getElementById("searchInfo").innerHTML = "You are searchching: " + keyword;
-    } 
 
     // Reset the searbar
     document.getElementById("searchBar").innerHTML = "";
