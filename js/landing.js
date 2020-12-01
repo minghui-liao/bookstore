@@ -16,12 +16,33 @@ function bookTemplate(book) {
 
 window.onload = function() {
     // Show the popular books
-    document.getElementById("popular").innerHTML = popularBooks.map(id => bookTemplate(allBooks[id-1])).join("");
+    requestBookInfo(popularBooks, (books) => {
+        document.getElementById("popular").innerHTML = books.map(bookTemplate).join("");
+    });    
     // Show the hotsale books
-    document.getElementById("hotsales").innerHTML = hotsalesBooks.map(id => bookTemplate(allBooks[id-1])).join("");
+    requestBookInfo(hotsalesBooks, (books) => {
+        document.getElementById("hotsales").innerHTML = books.map(bookTemplate).join("");
+    });
     document.getElementById("search").onclick = search;
-    
 }
+
+function requestBookInfo(arr, callback) {
+    let queryStr = arr.join(',');
+    let http = new XMLHttpRequest();
+    http.open('GET', 'landing.php?ids=' + queryStr)
+    http.onreadystatechange = function() {
+        console.log(this.readyState)
+        console.log(this.status)
+        console.log(this.response)
+        // console.log(this.responseText)
+        if(this.readyState == 4 && this.status == 200) {
+            books = JSON.parse(this.response)
+            console.log(books)
+            callback(books);
+        } 
+    };
+    http.send();
+  }
 
 // Impletemente the search function for search bar
 function search(event) {

@@ -16,7 +16,7 @@ window.onload = function () {
   let params = new URLSearchParams(queryStr);
   let id = params.get("id");
 
-  var http = new XMLHttpRequest();
+  let http = new XMLHttpRequest();
   http.open('GET', 'item.php?id=' + id)
   http.onreadystatechange = function() {
       console.log(this.readyState)
@@ -93,13 +93,3 @@ function minusFunc() {
   //calling price function
   priceTotal();
 }
-
-function searchFunc(event) {
-  event.preventDefault();
-  // Get the search query keyword
-  let keyword = document.getElementById("searchBar").value.toLowerCase();
-  console.log(keyword);
-
-  // Redirect to the search result page
-  window.location.href = "./search.html?keyword=" + keyword;
-};
