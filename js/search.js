@@ -1,6 +1,3 @@
-// var allBooks = "<?php json_encode($result);?>";
-//console.log(allBooks);
-
 // Book template for search result
 // Stars from font-awesome
 function bookTemplate(book) {      
@@ -14,9 +11,8 @@ function bookTemplate(book) {
         + starPercentage + "%;\"></div></div></div></div></div>"
 }
 
-
 // Initialize the books being searched
-let books = allBooks;
+let books = [];
 
 // Initialize the filtered books
 let filteredBooks = books;
@@ -29,7 +25,7 @@ let sortOrder = 0;
 
 window.onload = function() {
     // Initialize the books being searched
-    books = allBooks;
+    books = [];
 
     // Initialize the filtered books
     filteredBooks = books;
@@ -44,21 +40,42 @@ window.onload = function() {
     document.getElementById("search").onclick = search;
 
     // Get the query string from URL
-    //let queryStr = window.location.search;
-    var queryStr = "<?php echo json_encode(trim($_POST['search'])); ?>";
-    console.log(queryStr);
+    let queryStr = window.location.search;
     // Store the parameters in a URLSearchParams Object
     let params = new URLSearchParams(queryStr);
     // Get keyword from URL parameters
     keyword = params.get("keyword");
-
     console.log(keyword);
-    // Show the books including the keyword
-    if (keyword) {
-        books = allBooks.filter(book => book.title.toLowerCase().includes(keyword.toLowerCase()));
-        filteredBooks = books;
+
+    // If keyword is empty, return to home page. 
+    if (!keyword || keyword == "") {
+        window.location.href = "./Honbookstore.html";
+        return;
     }
-    displayBooks(books);
+
+    // Show the books including the keyword
+    // if (keyword) {
+    //     books = allBooks.filter(book => book.title.toLowerCase().includes(keyword.toLowerCase()));
+    //     filteredBooks = books;
+    // }
+    
+    var http = new XMLHttpRequest();
+    http.open('GET', 'searchbar.php?keyword=' + keyword)
+    http.onreadystatechange = function() {
+        console.log(this.readyState)
+        console.log(this.status)
+        //console.log(this.response)
+        console.log(this.responseText)
+        if(this.readyState == 4 && this.status == 200) {
+            books = JSON.parse(this.response);
+            filteredBooks = books;
+            console.log(books);
+            displayBooks(books);
+        } else {
+            books = [];
+        }
+    };
+    http.send();
 }
 
 // Sorting the books
@@ -83,9 +100,7 @@ function displayBooks(books) {
     // Show the search query keyword on web page
     if (keyword) {
         document.getElementById("searchInfo").innerHTML = "You are searchching: " + keyword;
-    } else {
-        document.getElementById("searchInfo").innerHTML = "All books";
-    }
+    } 
 
     // Reset the searbar
     document.getElementById("searchBar").innerHTML = "";
@@ -133,34 +148,7 @@ function applyFilter(books) {
 function search(event) {
     event.preventDefault();
     // Get keyword from search bar
-    keyword = document.getElementById("searchBar").value;
+    keyword = document.getElementById("searchBar").value.toLowerCase();
     // Set the href value to point to search reuslt page 
     window.location.href = "./search.html?keyword=" + keyword;
 };
-
-// function search(event) {
-//     event.preventDefault()
-//     // var form = new FormData()
-//     // form.append('file', document.querySelector('#searchBar').files[0]);
-//     // form.append('searchbox', true);
-//     keyword = document.getElementById("searchBar").value;
-//     console.log(keyword)
-
-//     var http = new XMLHttpRequest();
-//     http.open('GET', 'searchbar.php')
-//     http.onreadystatechange = function() {
-//         console.log(this.readyState)
-//         console.log(this.status)
-//         console.log(this.response)
-//         console.log(this.responseText)
-//         if(this.readyState == 4 && this.status == 200) {
-//             if(this.responseText == 1) {
-//                 //document.querySelector('#uploadError').innerText = "Image uploaded successfully.";
-//                 setTimeout(window.location.reload(), 1500);
-//             } else {
-//                 //document.querySelector('#uploadError').innerText = "An error occoured when uploading the image";
-//             }
-//         }
-//     };
-//     http.send({keyword: keyword});
-// }

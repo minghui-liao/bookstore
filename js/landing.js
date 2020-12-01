@@ -19,6 +19,15 @@ window.onload = function() {
     document.getElementById("popular").innerHTML = popularBooks.map(id => bookTemplate(allBooks[id-1])).join("");
     // Show the hotsale books
     document.getElementById("hotsales").innerHTML = hotsalesBooks.map(id => bookTemplate(allBooks[id-1])).join("");
+    document.getElementById("search").onclick = search;
+    
 }
 
-
+// Impletemente the search function for search bar
+function search(event) {
+    event.preventDefault();
+    // Get the search query keyword
+    let keyword = document.getElementById("searchBar").value.toLowerCase();
+    // Set the href value to point to search reuslt page
+    window.location.href = "./search.html?keyword=" + keyword;
+};

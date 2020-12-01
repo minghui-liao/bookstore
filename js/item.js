@@ -16,14 +16,28 @@ window.onload = function () {
   let params = new URLSearchParams(queryStr);
   let id = params.get("id");
 
-  // Ensure product id is not empty or exist overall product number
-  if (!id || id > allBooks.length) {
-    return;
-  }
+  var http = new XMLHttpRequest();
+  http.open('GET', 'item.php?id=' + id)
+  http.onreadystatechange = function() {
+      console.log(this.readyState)
+      console.log(this.status)
+      console.log(this.response)
+      // console.log(this.responseText)
+      if(this.readyState == 4) {
+        if (this.status == 200) {
+          book = JSON.parse(this.response)
+          console.log(book)
+          displayBook(book)
+        } else {
+          console.log("Product doesn't exist")
+          window.location.href="./Honbookstore.html"
+        }
+      } 
+  };
+  http.send();
+}
 
-  book = allBooks[id - 1];
-  console.log(book);
-
+function displayBook(book) {
   unitPrice = totalPrice = book.price;
   valueCount = 1;
   let starPercentage = book.rating * 100 / 5;
@@ -83,7 +97,7 @@ function minusFunc() {
 function searchFunc(event) {
   event.preventDefault();
   // Get the search query keyword
-  let keyword = document.getElementById("searchBar").value;
+  let keyword = document.getElementById("searchBar").value.toLowerCase();
   console.log(keyword);
 
   // Redirect to the search result page
