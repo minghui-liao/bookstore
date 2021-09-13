@@ -20,10 +20,6 @@ window.onload = function () {
   // Pass id as GET request parameter
   http.open('GET', 'item.php?id=' + id)
   http.onreadystatechange = function() {
-      // console.log(this.readyState)
-      // console.log(this.status)
-      // console.log(this.response)
-      // console.log(this.responseText)
       if(this.readyState == 4) {
         if (this.status == 200) {
           // Display books if request succeeds

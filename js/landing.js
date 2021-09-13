@@ -23,35 +23,26 @@ window.onload = function() {
     requestBookInfo(hotsalesBooks, (books) => {
         document.getElementById("hotsales").innerHTML = books.map(bookTemplate).join("");
     });
-    document.getElementById("search").onclick = search;
 }
 
 function requestBookInfo(books, callback) {
     // Join the id of books into querystr
     let queryStr = books.join(',');
     let http = new XMLHttpRequest();
-    // Pass queryStr as GET request parameter
+    // Pass queryStr as GET request parameter to PHP
+    // For example, landing.php?ids=1,2,3,4,5
     http.open('GET', 'landing.php?ids=' + queryStr)
+    // callback: Get the books from PHP
     http.onreadystatechange = function() {
-        // console.log(this.readyState)
-        // console.log(this.status)
-        // console.log(this.response)
-        // console.log(this.responseText)
         if(this.readyState == 4 && this.status == 200) {
             // Run callback function if request succeeds
             books = JSON.parse(this.response)
             console.log(books)
             callback(books);
-        } 
+        } else {
+            // Failed to get books
+            books = [];
+        }
     };
     http.send();
-  }
-
-// Impletemente the search function for search bar
-function search(event) {
-    event.preventDefault();
-    // Get the search query keyword
-    let keyword = document.getElementById("searchBar").value.toLowerCase();
-    // Set the href value to point to search reuslt page
-    window.location.href = "./search.html?keyword=" + keyword;
-};
+}

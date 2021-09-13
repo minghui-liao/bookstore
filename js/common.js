@@ -1,5 +1,5 @@
 // Search the books
-function search(event) {
+function searchFunc(event) {
     event.preventDefault();
     // Get keyword from search bar
     keyword = document.getElementById("searchBar").value.toLowerCase();

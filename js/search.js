@@ -36,9 +36,6 @@ window.onload = function() {
     ratingFilter = 0;
     sortOrder = 0;
 
-    // Pass the search bar function
-    document.getElementById("search").onclick = search;
-
     // Get the query string from URL
     let queryStr = window.location.search;
     // Store the parameters in a URLSearchParams Object
@@ -53,25 +50,15 @@ window.onload = function() {
         return;
     }
 
-    // Show the books including the keyword
-    // if (keyword) {
-    //     books = allBooks.filter(book => book.title.toLowerCase().includes(keyword.toLowerCase()));
-    //     filteredBooks = books;
-    // }
-    
     let http = new XMLHttpRequest();
-    // Pass keyword as GET request parameter
-    http.open('GET', 'searchbar.php?keyword=' + keyword)
+    // Pass keyword as GET request parameter to PHP
+    http.open('GET', 'search.php?keyword=' + keyword);
+    // callback: Get and display the books from PHP
     http.onreadystatechange = function() {
-        console.log(this.readyState)
-        console.log(this.status)
-        //console.log(this.response)
-        console.log(this.responseText)
         if(this.readyState == 4 && this.status == 200) {
             // Get the books if request succeeds
             books = JSON.parse(this.response);
             filteredBooks = books;
-            console.log(books);
         } else {
             books = [];
         }
